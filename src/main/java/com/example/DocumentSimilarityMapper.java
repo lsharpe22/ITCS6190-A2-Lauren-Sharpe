@@ -1,6 +1,8 @@
 package com.example;
 
 import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -30,10 +32,34 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class DocumentSimilarityMapper extends Mapper<LongWritable, Text, Text, Text> {
 
     @Override
-    protected void map(LongWritable key, Text value, Context context)
+    protected void map(LongWritable key, org.w3c.dom.Text value, Context context)
             throws IOException, InterruptedException {
         // TODO: split the line into the document ID and the text,
         //       tokenize the text following the rules above,
         //       and emit what the reducer needs.
+        String line = value.toString().trim();
+
+        if (line.isEmpty()){
+            return;
+        }
+        
+        String[] parts = line.split("\\s+", 2);
+        String documentID = parts[0];
+        if(parts.length < 2){
+            context.write(new text(documentID), new text(""));
+            return;
+        }
+
+        String documentText = parts[1].toLowerCase();
+        Set<String> words = new TreeSet<>();
+        for(String token: documentText.split("\\s+")){
+            token = token.replaceAll("[^a-z0-9]", "");
+            if(!token.isEmpty()){
+                words.add(token);
+            }
+        }
+
+        String wordList = String.join(" ", words);
+        context.write(Text(documentID), Text(wordList));
     }
 }

@@ -1,6 +1,13 @@
 package com.example;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Locale;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -27,14 +34,29 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 public class DocumentSimilarityReducer extends Reducer<Text, Text, Text, Text> {
 
+    private Map<String, Set<String>> documents = new HashMap<>();
     @Override
-    protected void reduce(Text key, Iterable<Text> values, Context context)
+    protected void reduce(org.w3c.dom.Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
-        // TODO
+        for(org.w3c.dom.Text value : values){
+            Set<String> words = new HashSet<>();
+            String wordList = value.toString().trim();
+            if(!wordList.isEmpty()){
+                String[] tokens = wordList.split("\\s+");
+                for(String word : tokens){
+                    words.add(word);
+                }
+            }
+            documents.put(key.toString(), words);
+        }
+        
+
+
     }
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
-        // TODO (only needed if your design compares documents here)
+        
+
     }
 }
