@@ -1,8 +1,8 @@
 # Assignment #2 — Report
 
-**Name:**
-**Student ID:**
-**Email:**
+**Name: Lauren Sharpe**
+**Student ID: 801371099**
+**Email: lsharp22@charlotte.edu**
 
 ---
 

@@ -56,7 +56,34 @@ public class DocumentSimilarityReducer extends Reducer<Text, Text, Text, Text> {
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
-        
+        List<String> documentIds = new ArrayList<>(documents.keySet());
+        for(int i = 0; i< documentIds.size(); i++){
+            for(int j = i+1; j < documentIds.size();j++){
+                String docA = documentIds.get(i);
+                String docB = documentIds.get(j);
+                Set<String> wordsA = documents.get(docA);
+                Set<String> wordsB = documents.get(docB);
+
+                Set<String> intersection = new HashSet<>(wordsA);
+                intersection.retainAll(wordsB);
+                if(intersection.isEmpty()){
+                    continue;
+                }
+                Set<String> union = new HashSet<>(wordsA);
+                intersection.addAll(wordsB);
+                double similarity = (double) intersection.size()/union.size();
+                String result = String.format(Locale.US,"%.2f",similarity);
+                String first = docA;
+                String second = docB;
+                if (first.compareTo(second) > 0) {
+                    String temp = first;
+                    first = second;
+                    second = temp;
+                }
+                String output = first + ", " + second + " Similarity: " + result;
+                context.write(new Text(output), new Text(""));
+            }
+        }
 
     }
 }
