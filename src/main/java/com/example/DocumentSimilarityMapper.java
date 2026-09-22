@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  *         "<DocumentID> <text of the document...>"
  *         The key is the byte offset of the line in the file (you will not need it).
  *
- * Output: TODO — decide what your mapper emits. Whatever you choose, the reducer must be
+ * Output:   decide what your mapper emits. Whatever you choose, the reducer must be
  *         able to reconstruct, for every pair of documents, how many distinct words the two
  *         documents share and how many distinct words they have in total.
  *
@@ -32,11 +32,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class DocumentSimilarityMapper extends Mapper<LongWritable, Text, Text, Text> {
 
     @Override
-    protected void map(LongWritable key, org.w3c.dom.Text value, Context context)
+    protected void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
-        // TODO: split the line into the document ID and the text,
-        //       tokenize the text following the rules above,
-        //       and emit what the reducer needs.
+
         String line = value.toString().trim();
 
         if (line.isEmpty()){
@@ -46,7 +44,7 @@ public class DocumentSimilarityMapper extends Mapper<LongWritable, Text, Text, T
         String[] parts = line.split("\\s+", 2);
         String documentID = parts[0];
         if(parts.length < 2){
-            context.write(new text(documentID), new text(""));
+            context.write(new Text(documentID), new Text(""));
             return;
         }
 
@@ -60,6 +58,6 @@ public class DocumentSimilarityMapper extends Mapper<LongWritable, Text, Text, T
         }
 
         String wordList = String.join(" ", words);
-        context.write(Text(documentID), Text(wordList));
+        context.write(new Text(documentID), new Text(wordList));
     }
 }

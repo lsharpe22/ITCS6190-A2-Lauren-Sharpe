@@ -41,7 +41,7 @@ public class DocumentSimilarityDriver {
         }
 
         Configuration conf = new Configuration();
-        // TODO: configure the job — see the class comment above and Controller.java from L4.
+    
         Job job = Job.getInstance(conf, "document similarity");
         job.setJarByClass(DocumentSimilarityDriver.class);
         job.setMapperClass(DocumentSimilarityMapper.class);

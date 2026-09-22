@@ -36,9 +36,9 @@ public class DocumentSimilarityReducer extends Reducer<Text, Text, Text, Text> {
 
     private Map<String, Set<String>> documents = new HashMap<>();
     @Override
-    protected void reduce(org.w3c.dom.Text key, Iterable<Text> values, Context context)
+    protected void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
-        for(org.w3c.dom.Text value : values){
+        for(Text value : values){
             Set<String> words = new HashSet<>();
             String wordList = value.toString().trim();
             if(!wordList.isEmpty()){
@@ -70,7 +70,7 @@ public class DocumentSimilarityReducer extends Reducer<Text, Text, Text, Text> {
                     continue;
                 }
                 Set<String> union = new HashSet<>(wordsA);
-                intersection.addAll(wordsB);
+                union.addAll(wordsB);
                 double similarity = (double) intersection.size()/union.size();
                 String result = String.format(Locale.US,"%.2f",similarity);
                 String first = docA;
